@@ -7,18 +7,33 @@ def push_constant(const):
 
 
 def push_local(index):
+    return _push('LCL', index)
+
+
+def push_that(index):
+    return _push('THAT', index)
+
+
+def push_this(index):
+    return _push('THIS', index)
+
+
+def push_argument(index):
+    return _push('ARG', index)
+
+
+def _push(segment, index):
    if index == 0:
        return [
-            # save value of the first local segment memory cell to D register
-            '@LCL',
+            # save value of the first segment memory cell to D register
+            '@' + segment,
             'D=M',
        ] + _push_d_register_to_stack()
-
    return [
-        # save value of the 10th local segment memory cell to D register
+        # save value of the n-th segment memory cell to D register
         '@' + str(index),
         'D=A',
-        '@LCL',
+        '@' + segment,
         'A=D+A',
         'D=M',
    ] + _push_d_register_to_stack()
