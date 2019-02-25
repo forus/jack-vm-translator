@@ -7,12 +7,21 @@ def push_constant(const):
 
 
 def push_local(index):
+   if index == 0:
+       return [
+            # save value of the first local segment memory cell to D register
+            '@LCL',
+            'D=M',
+       ] + _push_d_register_to_stack()
+
    return [
-        # save value of the first local segment memory cell to D register
+        # save value of the 10th local segment memory cell to D register
+        '@' + str(index),
+        'D=A',
         '@LCL',
+        'A=D+A',
         'D=M',
    ] + _push_d_register_to_stack()
-
 
 def _push_d_register_to_stack():
     return [

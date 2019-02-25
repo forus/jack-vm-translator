@@ -37,7 +37,7 @@ class TranslateTestCase(unittest.TestCase):
             'M=M+1',
         ])
 
-    def test_translate_push_to_local_segment(self):
+    def test_translate_push_to_0_local_segment(self):
         # when
         asm_cmds = push_local(0)
         # then
@@ -54,6 +54,25 @@ class TranslateTestCase(unittest.TestCase):
             'M=M+1',
         ])
 
+    def test_translate_push_to_10_local_segment(self):
+        # when
+        asm_cmds = push_local(10)
+        # then
+        self.assertEqual(asm_cmds, [
+            # read 10th memory cell of local segment value to D register
+            '@10',
+            'D=A',
+            '@LCL',
+            'A=D+A',
+            'D=M',
+            # write constant from D register to the stack. Effectively *SP=*LCL
+            '@SP',
+            'A=M',
+            'M=D',
+            # increase the stack pointer: SP++
+            '@SP',
+            'M=M+1',
+        ])
 
 if __name__ == '__main__':
     unittest.main()
